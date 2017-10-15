@@ -4,5 +4,4 @@ threadsafe: true
 
 handlers:
 - url: /.*
-  static_files: favicon.ico
-  upload: demo.app
+  script: main.app
