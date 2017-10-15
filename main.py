@@ -77,9 +77,10 @@ class SlipHandler(webapp2.RequestHandler):
         if id:
             s = ndb.Key(urlsafe=id).get()
             #Checking if boat needs updating to at sea
-            if s.current_boat != null:
-                b = ndb.Key(s.current_boat).get()
+            if not s.current_boat:
+                b = ndb.Key(urlsafe=s.current_boat).get()
                 b.at_sea = True
+                b.put()
             s.key.delete()
             self.response.write("Slip "+id+" deleted")
     def patch(self, id=None):
@@ -87,13 +88,14 @@ class SlipHandler(webapp2.RequestHandler):
             s = ndb.Key(urlsafe=id).get()
             slip_data = json.loads(self.request.body)
             #managing arrival
-            if s.current_boat == null:
-                b = ndb.Key(s.current_boat).get()
+            if not s.current_boat:
+                b = ndb.Key(urlsafe=s.current_boat).get()
                 b.at_sea = False
+                b.put()
             else:
                 #returning 403
-                response.write("Error: 403 Forbidden message")
-                response.set_status(403)
+                self.response.write("Error: 403 Forbidden message")
+                self.response.set_status(403)
 
             for key in slip_data:
                 setattr(s, key, slip_data[key])
