@@ -1,13 +1,14 @@
-from google.appengine.ext import ndb
-import webapp2
-import json
-import logging
 '''
 Assignment: REST Planning and Implementation
 Author: Samuel Hudson
 Course: CS496
 Date: 10/15/17
 '''
+from google.appengine.ext import ndb
+import webapp2
+import json
+import logging
+
 class Boat(ndb.Model):
     id = ndb.StringProperty()
     name = ndb.StringProperty()
