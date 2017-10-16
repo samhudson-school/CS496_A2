@@ -48,7 +48,7 @@ class BoatHandler(webapp2.RequestHandler):
         if id:
             b = ndb.Key(urlsafe=id).get()
             #extra credit would need to handle update to all departures
-            if not b.at_sea:
+            if not b.at_sea and len(Slip.query(Slip.current_boat == b.id).get())> 0:
                 s = Slip.query(Slip.current_boat == b.id).get()
                 s.arrival_date = None
                 s.current_boat = None
@@ -109,8 +109,8 @@ class SlipHandler(webapp2.RequestHandler):
         if id:
             s = ndb.Key(urlsafe=id).get()
             #checking if boat needs updating to at sea
-            if not s.current_boat:
-                b = ndb.Key(urlsafe=s.current_boat).get()
+            if s.current_boat:
+                b = Boat.query(Boat.id == s.current_boat).get()
                 b.at_sea = True
                 b.put()
             s.key.delete()
