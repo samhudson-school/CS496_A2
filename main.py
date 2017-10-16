@@ -87,9 +87,10 @@ class SlipHandler(webapp2.RequestHandler):
         if id:
             s = ndb.Key(urlsafe=id).get()
             slip_data = json.loads(self.request.body)
+            logging.info(type(s.current_boat))
             #managing arrival
             if not s.current_boat:
-                b = ndb.Key(urlsafe=s.current_boat).get()
+                b = ndb.Key(urlsafe=slip_data['current_boat']).get()
                 b.at_sea = False
                 b.put()
             else:
